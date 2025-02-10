@@ -21,7 +21,7 @@ jobs:
 
       - name: GitHub API からファイルを取得
         run: |
-          curl -H "Authorization: token ${{ secrets.GH_TOKEN }}" -O https://github.com/YOUR_GITHUB_USERNAME/dylib-decompiler/releases/download/latest/${{ github.event.inputs.filename }}
+          curl -H "Authorization: token ${{ secrets.GH_TOKEN }}" -O https://github.com/rhgrive/build/releases/download/latest/${{ github.event.inputs.filename }}
 
       - name: 逆アセンブル
         run: |
