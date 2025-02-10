@@ -19,8 +19,8 @@ jobs:
       - name: dylib ファイルのダウンロード
         run: |
           ISSUE_BODY="${{ github.event.issue.body }}"
-          URL=$(echo "$ISSUE_BODY" | grep -oP '(?<=URL: ).*')
-          curl -L -o target.dylib "$URL"
+          curl -L -o target.dylib "$ISSUE_BODY"
+
 
       - name: 逆アセンブル
         run: |
