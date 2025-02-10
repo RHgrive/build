@@ -12,13 +12,13 @@ jobs:
     runs-on: macos-latest  # macOS Runner を使用する
     steps:
       - name: ファイルをダウンロード
-        run: curl -L -o target.dylib "https://raw.githubusercontent.com/rhgrive/build/main/target.dylib"
+        run: curl -L -o "${{ github.event.inputs.filename }}" "https://raw.githubusercontent.com/rhgrive/build/main/${{ github.event.inputs.filename }}"
 
       - name: 逆アセンブル (otool)
         run: |
-          otool -tv target.dylib > decompiled.txt
-          strings target.dylib > strings.txt
-          nm -g target.dylib > symbols.txt
+          otool -tv "${{ github.event.inputs.filename }}" > decompiled.txt
+          strings "${{ github.event.inputs.filename }}" > strings.txt
+          nm -g "${{ github.event.inputs.filename }}" > symbols.txt
 
       - name: 結果をアップロード
         uses: actions/upload-artifact@v4
