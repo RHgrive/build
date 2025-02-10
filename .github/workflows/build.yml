@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Xcode
+        uses: actions/setup-xcode@v2
+        with:
+          xcode-version: 'latest'
+
       - name: Install CMake
         run: brew install cmake
 
@@ -20,5 +25,5 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake .. -DCMAKE_OSX_SYSROOT=$(xcrun --sdk iphoneos --show-sdk-path)
           cmake --build . --config Release
