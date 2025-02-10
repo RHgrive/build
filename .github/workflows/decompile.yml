@@ -24,9 +24,10 @@ jobs:
 
       - name: 逆アセンブル
         run: |
-          otool -tv target.dylib > decompiled.txt
+          llvm-objdump -d target.dylib > decompiled.txt
           strings target.dylib > strings.txt
           nm -g target.dylib > symbols.txt
+
 
       - name: 結果をアップロード
         uses: actions/upload-artifact@v4
