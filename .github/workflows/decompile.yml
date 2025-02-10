@@ -25,20 +25,9 @@ jobs:
         run: |
           ls -lh
           file target.dylib
-      - name: ファイル確認
-        run: |
-          ls -lh target.dylib
-          file target.dylib
-
-      - name: ダウンロードレスポンスを確認
-        run: |
-          curl -L -o target.dylib "https://raw.githubusercontent.com/rhgrive/build/main/target.dylib"
-          cat target.dylib | head -n 10  # 先頭10行を確認
-
-
       - name: 逆アセンブル
         run: |
-          llvm-objdump -d target.dylib > decompiled.txt
+          llvm-objdump --macho -d target.dylib > decompiled.txt
           strings target.dylib > strings.txt
           nm -g target.dylib > symbols.txt
 
