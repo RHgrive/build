@@ -1,0 +1,33 @@
+name: Build iOS Dylib
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Xcode
+        uses: actions/setup-xcode@v3
+        with:
+          xcode-version: '14.3' # iOS 16 SDK を含む Xcode バージョンを指定 (適宜調整)
+
+      - name: Get Xcode path
+        id: xcode-path
+        run: echo "path=$(xcrun --sdk iphoneos --show-sdk-path)" >> $GITHUB_OUTPUT
+
+      - name: Compile dylib
+        run: |
+          xcrun -sdk iphoneos clang -arch arm64 -isysroot ${{ steps.xcode-path.outputs.path }} -dynamiclib AlertDylib.m -o AlertDylib.dylib
+
+      - name: Upload dylib artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dylib-artifact
+          path: AlertDylib.dylib
