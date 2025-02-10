@@ -22,6 +22,14 @@ jobs:
           fi
           echo "FILENAME=${FILENAME}" >> $GITHUB_ENV
 
+      - name: FILENAMEの確認
+        run: |
+          echo "ダウンロードするファイル名: $FILENAME"
+          if [[ -z "$FILENAME" ]]; then
+            echo "エラー: FILENAMEが空です。"
+            exit 1
+          fi
+
       - name: ファイルをダウンロード
         run: |
           curl -L -o "$FILENAME" "https://raw.githubusercontent.com/rhgrive/build/main/$FILENAME"
