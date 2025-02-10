@@ -4,8 +4,12 @@ project(MyDylib)
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 set(CMAKE_SYSTEM_NAME iOS)
 
-# SDKのパスを明示的に指定する
-set(CMAKE_OSX_SYSROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
+# SDKのパスをxcrunで取得
+execute_process(COMMAND xcrun --sdk iphoneos --show-sdk-path
+                  OUTPUT_VARIABLE IOS_SDK_PATH
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+set(CMAKE_OSX_SYSROOT "${IOS_SDK_PATH}")
 
 add_library(MyDylib SHARED
     MyDylib.m
