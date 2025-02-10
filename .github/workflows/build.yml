@@ -1,33 +1,24 @@
-name: Build iOS Dylib
+name: Build iOS dylib
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Set up Xcode
-        uses: actions/setup-xcode@v1
-        with:
-          xcode-version: latest
+      - name: Install CMake
+        run: brew install cmake
 
-      - name: Get Xcode path
-        id: xcode-path
-        run: echo "path=$(xcrun --sdk iphoneos --show-sdk-path)" >> $GITHUB_OUTPUT
-
-      - name: Compile dylib
+      - name: Build dylib
         run: |
-          xcrun -sdk iphoneos clang -arch arm64 -isysroot ${{ steps.xcode-path.outputs.path }} -dynamiclib AlertDylib.m -o AlertDylib.dylib
-
-      - name: Upload dylib artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dylib-artifact
-          path: AlertDylib.dylib
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build . --config Release
