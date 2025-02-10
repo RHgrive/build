@@ -21,9 +21,17 @@ jobs:
             FILENAME="${{ github.event.inputs.filename }}"
           fi
           echo "FILENAME=${FILENAME}" >> $GITHUB_ENV
-
+          
+      - name: ファイル名の確認
+        run: echo "使用するファイル名: $FILENAME"
+      
       - name: ファイルをダウンロード
-        run: curl -L -o "$FILENAME" "https://raw.githubusercontent.com/rhgrive/build/main/$FILENAME"
+        run: |
+          if [ -z "$FILENAME" ]; then
+            echo "エラー: FILENAME が空です！"
+            exit 1
+          fi
+          curl -L -o "$FILENAME" "https://raw.githubusercontent.com/rhgrive/build/main/$FILENAME"
 
       - name: 逆アセンブル (otool)
         run: |
