@@ -1,15 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 project(MyDylib)
 
-set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 set(CMAKE_SYSTEM_NAME iOS)
+set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 
-# SDKのパスをxcrunで取得
-execute_process(COMMAND xcrun --sdk iphoneos --show-sdk-path
-                  OUTPUT_VARIABLE IOS_SDK_PATH
-                  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-set(CMAKE_OSX_SYSROOT "${IOS_SDK_PATH}")
+# 正しいSDKパスを指定
+set(CMAKE_OSX_SYSROOT "/Applications/Xcode_15.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.5.sdk")
 
 add_library(MyDylib SHARED
     MyDylib.m
