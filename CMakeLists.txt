@@ -3,7 +3,7 @@ project(MyDylib)
 
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 set(CMAKE_SYSTEM_NAME iOS)
-set(CMAKE_OSX_SYSROOT iphoneos)
+set(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk)
 
 add_library(MyDylib SHARED
     MyDylib.m
