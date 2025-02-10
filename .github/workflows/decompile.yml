@@ -16,7 +16,7 @@ jobs:
       - name: ファイル名を取得
         run: |
           if [[ -z "${{ github.event.inputs.filename }}" ]]; then
-            FILENAME=$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=filename: ).*' | tr -d '\r')
+            FILENAME="target.dylib"
           else
             FILENAME="${{ github.event.inputs.filename }}"
           fi
@@ -32,6 +32,7 @@ jobs:
 
       - name: ファイルをダウンロード
         run: |
+          echo "ダウンロード中: $FILENAME"
           curl -L -o "$FILENAME" "https://raw.githubusercontent.com/rhgrive/build/main/$FILENAME"
           if [[ ! -f "$FILENAME" ]]; then
             echo "ファイルのダウンロードに失敗しました。"
