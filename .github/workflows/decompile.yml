@@ -1,11 +1,8 @@
 name: Decompile dylib
 
 on:
-  workflow_dispatch:
-    inputs:
-      filename:
-        description: 'dylib filename'
-        required: true
+  issues:
+    types: [opened]
 
 jobs:
   decompile:
@@ -19,15 +16,17 @@ jobs:
           sudo apt update
           sudo apt install -y binutils clang llvm
 
-      - name: GitHub API からファイルを取得
+      - name: dylib ファイルのダウンロード
         run: |
-          curl -H "Authorization: token ${{ secrets.GH_TOKEN }}" -O https://github.com/rhgrive/build/releases/download/latest/${{ github.event.inputs.filename }}
+          ISSUE_BODY="${{ github.event.issue.body }}"
+          URL=$(echo "$ISSUE_BODY" | grep -oP '(?<=URL: ).*')
+          curl -L -o target.dylib "$URL"
 
       - name: 逆アセンブル
         run: |
-          otool -tv ${{ github.event.inputs.filename }} > decompiled.txt
-          strings ${{ github.event.inputs.filename }} > strings.txt
-          nm -g ${{ github.event.inputs.filename }} > symbols.txt
+          otool -tv target.dylib > decompiled.txt
+          strings target.dylib > strings.txt
+          nm -g target.dylib > symbols.txt
 
       - name: 結果をアップロード
         uses: actions/upload-artifact@v4
