@@ -1,6 +1,8 @@
 name: Decompile dylib
 
 on:
+  issues:
+    types: [opened]
   workflow_dispatch:
     inputs:
       filename:
@@ -9,16 +11,25 @@ on:
 
 jobs:
   decompile:
-    runs-on: macos-latest  # macOS Runner を使用する
+    runs-on: macos-latest
     steps:
+      - name: ファイル名を取得
+        run: |
+          if [[ -z "${{ github.event.inputs.filename }}" ]]; then
+            FILENAME=$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=filename: ).*' | tr -d '\r')
+          else
+            FILENAME="${{ github.event.inputs.filename }}"
+          fi
+          echo "FILENAME=${FILENAME}" >> $GITHUB_ENV
+
       - name: ファイルをダウンロード
-        run: curl -L -o "${{ github.event.inputs.filename }}" "https://raw.githubusercontent.com/rhgrive/build/main/${{ github.event.inputs.filename }}"
+        run: curl -L -o "$FILENAME" "https://raw.githubusercontent.com/rhgrive/build/main/$FILENAME"
 
       - name: 逆アセンブル (otool)
         run: |
-          otool -tv "${{ github.event.inputs.filename }}" > decompiled.txt
-          strings "${{ github.event.inputs.filename }}" > strings.txt
-          nm -g "${{ github.event.inputs.filename }}" > symbols.txt
+          otool -tv "$FILENAME" > decompiled.txt
+          strings "$FILENAME" > strings.txt
+          nm -g "$FILENAME" > symbols.txt
 
       - name: 結果をアップロード
         uses: actions/upload-artifact@v4
