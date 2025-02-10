@@ -1,34 +1,39 @@
-name: Build iOS dylib
+name: Decompile dylib
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: 'dylib filename'
+        required: true
 
 jobs:
-  build:
-    runs-on: macos-latest
-
+  decompile:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v3
 
-      - name: Set up Xcode
-        run: sudo xcode-select --switch /Applications/Xcode_15.4.app/Contents/Developer
-
-      - name: Install CMake
-        run: brew install cmake
-
-      - name: Build dylib for iOS device
+      - name: 必要なツールをインストール
         run: |
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_OSX_ARCHITECTURES=arm64
-          cmake --build . --config Release
+          sudo apt update
+          sudo apt install -y binutils clang llvm
 
-      - name: Build dylib for iOS simulator
+      - name: ファイルをダウンロード
         run: |
-          mkdir build_simulator
-          cd build_simulator
-          cmake .. -DCMAKE_OSX_ARCHITECTURES=x86_64
-          cmake --build . --config Release
+          curl -O https://github.com/YOUR_GITHUB_USERNAME/dylib-decompiler/releases/download/latest/${{ github.event.inputs.filename }}
+
+      - name: 逆アセンブル
+        run: |
+          otool -tv ${{ github.event.inputs.filename }} > decompiled.txt
+          strings ${{ github.event.inputs.filename }} > strings.txt
+          nm -g ${{ github.event.inputs.filename }} > symbols.txt
+
+      - name: 結果をアップロード
+        uses: actions/upload-artifact@v3
+        with:
+          name: decompiled-files
+          path: |
+            decompiled.txt
+            strings.txt
+            symbols.txt
