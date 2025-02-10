@@ -27,7 +27,7 @@ jobs:
           xcrun -sdk iphoneos clang -arch arm64 -isysroot ${{ steps.xcode-path.outputs.path }} -dynamiclib AlertDylib.m -o AlertDylib.dylib
 
       - name: Upload dylib artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dylib-artifact
           path: AlertDylib.dylib
