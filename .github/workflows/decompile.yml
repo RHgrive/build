@@ -16,10 +16,10 @@ jobs:
           sudo apt update
           sudo apt install -y binutils clang llvm
 
-      - name: dylib ファイルのダウンロード
+      - name: ファイルをダウンロード
         run: |
-          ISSUE_BODY="${{ github.event.issue.body }}"
-          curl -L -o target.dylib "$ISSUE_BODY"
+          curl -L -o target.dylib "https://raw.githubusercontent.com/rhgrive/build/main/target.dylib"
+
 
       - name: ダウンロードしたファイルの詳細を確認
         run: |
