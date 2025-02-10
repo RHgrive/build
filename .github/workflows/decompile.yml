@@ -27,7 +27,7 @@ jobs:
           file target.dylib
       - name: ダウンロードレスポンスを確認
         run: |
-          curl -L -o target.dylib "$URL"
+          curl -L -o target.dylib "https://raw.githubusercontent.com/rhgrive/build/main/target.dylib"
           cat target.dylib | head -n 10  # 先頭10行を確認
 
 
