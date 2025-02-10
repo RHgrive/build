@@ -23,13 +23,23 @@ jobs:
           echo "FILENAME=${FILENAME}" >> $GITHUB_ENV
 
       - name: ファイルをダウンロード
-        run: curl -L -o "$FILENAME" "https://raw.githubusercontent.com/rhgrive/build/main/$FILENAME"
+        run: |
+          curl -L -o "$FILENAME" "https://raw.githubusercontent.com/rhgrive/build/main/$FILENAME"
+          if [[ ! -f "$FILENAME" ]]; then
+            echo "ファイルのダウンロードに失敗しました。"
+            exit 1
+          fi
 
       - name: 逆アセンブル (otool)
         run: |
-          otool -tv "$FILENAME" > decompiled.txt
-          strings "$FILENAME" > strings.txt
-          nm -g "$FILENAME" > symbols.txt
+          if [[ -f "$FILENAME" ]]; then
+            otool -tv "$FILENAME" > decompiled.txt
+            strings "$FILENAME" > strings.txt
+            nm -g "$FILENAME" > symbols.txt
+          else
+            echo "ファイルが存在しません。"
+            exit 1
+          fi
 
       - name: 結果をアップロード
         uses: actions/upload-artifact@v4
