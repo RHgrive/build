@@ -1,5 +1,6 @@
 name: Build iOS dylib
 
+
 on:
   push:
     branches:
@@ -18,7 +19,10 @@ jobs:
 
       - name: Install CMake
         run: brew install cmake
-
+        
+      - name: Check
+        run: xcrun --sdk iphoneos --show-sdk-path
+        
       - name: Build dylib
         run: |
           mkdir build
