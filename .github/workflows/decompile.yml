@@ -14,14 +14,14 @@ jobs:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v3
 
-      - name:
+      - name: 必要なツールをインストール
         run: |
           sudo apt update
           sudo apt install -y binutils clang llvm
 
-      - name: ファイルをダウンロード
+      - name: GitHub API からファイルを取得
         run: |
-          curl -O https://github.com/YOUR_GITHUB_USERNAME/dylib-decompiler/releases/download/latest/${{ github.event.inputs.filename }}
+          curl -H "Authorization: token ${{ secrets.GH_TOKEN }}" -O https://github.com/YOUR_GITHUB_USERNAME/dylib-decompiler/releases/download/latest/${{ github.event.inputs.filename }}
 
       - name: 逆アセンブル
         run: |
