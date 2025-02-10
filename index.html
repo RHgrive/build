@@ -26,7 +26,8 @@
                 const response = await fetch('https://api.github.com/repos/rhgrive/build/actions/workflows/decompile.yml/dispatches', {
                     method: 'POST',
                     headers: {
-                        'Accept': 'application/vnd.github.v3+json'
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': 'token YOUR_ADMIN_TOKEN'
                     },
                     body: JSON.stringify({
                         ref: 'main',
