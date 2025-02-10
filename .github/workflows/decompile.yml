@@ -1,36 +1,24 @@
 name: Decompile dylib
 
 on:
-  issues:
-    types: [opened]
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: 'dylib filename'
+        required: true
 
 jobs:
   decompile:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest  # macOS Runner を使用する
     steps:
-      - name: リポジトリをチェックアウト
-        uses: actions/checkout@v3
-
-      - name: 必要なツールをインストール
-        run: |
-          sudo apt update
-          sudo apt install -y binutils clang llvm
-
       - name: ファイルをダウンロード
-        run: |
-          curl -L -o target.dylib "https://raw.githubusercontent.com/rhgrive/build/main/target.dylib"
+        run: curl -L -o target.dylib "https://raw.githubusercontent.com/rhgrive/build/main/target.dylib"
 
-
-      - name: ダウンロードしたファイルの詳細を確認
+      - name: 逆アセンブル (otool)
         run: |
-          ls -lh
-          file target.dylib
-      - name: 逆アセンブル
-        run: |
-          llvm-objdump --macho -d target.dylib > decompiled.txt
+          otool -tv target.dylib > decompiled.txt
           strings target.dylib > strings.txt
           nm -g target.dylib > symbols.txt
-
 
       - name: 結果をアップロード
         uses: actions/upload-artifact@v4
