@@ -30,7 +30,7 @@ jobs:
           nm -g ${{ github.event.inputs.filename }} > symbols.txt
 
       - name: 結果をアップロード
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: decompiled-files
           path: |
